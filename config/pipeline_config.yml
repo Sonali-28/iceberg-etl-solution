@@ -1,0 +1,44 @@
+data_sources:
+  customer_data: "data/customer_data.parquet"
+  sales_data: "data/sales_data.csv"
+
+output:
+  base_output_dir: "./output"
+  backend: "iceberg"
+  iceberg_warehouse: "./warehouse"
+  partitions:
+    agg_daily_sales: ["invoice_date"]
+    agg_sales_by_mall_category: ["shopping_mall", "category"]
+
+validation:
+  sales:
+    required_columns: 
+      - invoice_no
+      - customer_id
+      - category
+      - quantity
+      - price
+      - invoice_date
+      - shopping_mall
+    positive_values:
+      - quantity
+      - price
+
+  customer:
+    required_columns: 
+      - customer_id 
+      - gender
+      - payment_method
+    optional_columns:
+      - age
+    allowed_values:
+      gender: ["Male", "Female"]
+      payment_method: ["Credit Card", "Debit Card", "Cash"]
+    numeric_ranges:
+      age:
+        min: 18
+        max: 69
+
+logging:
+  level: "INFO"
+  log_file: "logs/pipeline.log"

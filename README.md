@@ -1,4 +1,4 @@
-# Jobber ETL Solution – Multi-Format Open Table Format Pipeline
+ETL Solution – Multi-Format Open Table Format Pipeline
 
 This repository contains a production-ready end-to-end ETL pipeline supporting **Apache Iceberg**, **Delta Lake**, **Apache Hudi**, and native **Parquet** backends.
 
@@ -48,14 +48,14 @@ pip install pyspark
 ## 2. Project Structure
 
 ```
-jobber_etl_solution/
+j_etl_solution/
 ├── README.md
 ├── requirements.txt
 ├── pytest.ini                          # Pytest configuration
 ├── config/
 │   └── pipeline_config.yml             # YAML pipeline configuration
 ├── src/
-│   └── jobber_pipeline/
+│   └── j_pipeline/
 │       ├── __init__.py
 │       ├── config.py                   # Configuration management with path resolution
 │       ├── logger.py                   # Structured logging setup
@@ -137,14 +137,14 @@ backend: "hudi"
 
 ```bash
 export PYTHONPATH=src
-python -m jobber_pipeline.main --config config/pipeline_config.yml
+python -m j_pipeline.main --config config/pipeline_config.yml
 ```
 
 ### 4.2 With Specific Backend
 
 ```bash
 # Delta Lake backend
-PYTHONPATH=src python -m jobber_pipeline.main --config config/pipeline_config.yml
+PYTHONPATH=src python -m j_pipeline.main --config config/pipeline_config.yml
 # (After updating config to backend: "delta")
 ```
 
@@ -292,7 +292,7 @@ grep "backend:" config/pipeline_config.yml
 sed -i '' 's/backend: "iceberg"/backend: "parquet"/' config/pipeline_config.yml
 
 # Re-run pipeline
-PYTHONPATH=src python -m jobber_pipeline.main --config config/pipeline_config.yml
+PYTHONPATH=src python -m j_pipeline.main --config config/pipeline_config.yml
 
 # Data will now be in: config/output/
 ```
@@ -306,7 +306,7 @@ pip install deltalake
 sed -i '' 's/backend: "iceberg"/backend: "delta"/' config/pipeline_config.yml
 
 # Re-run pipeline
-PYTHONPATH=src python -m jobber_pipeline.main --config config/pipeline_config.yml
+PYTHONPATH=src python -m j_pipeline.main --config config/pipeline_config.yml
 
 # Data will be in: config/warehouse/
 ```
@@ -367,7 +367,7 @@ pytest tests/test_extract.py -v
 ### 5.3 Test Coverage
 
 ```bash
-pytest tests/ --cov=src/jobber_pipeline --cov-report=html
+pytest tests/ --cov=src/j_pipeline --cov-report=html
 # View coverage at htmlcov/index.html
 ```
 
@@ -415,9 +415,9 @@ def get_writer(config: OutputConfig, logger) -> BaseTableWriter:
 ### 6.3 Example: Write with Iceberg
 
 ```python
-from jobber_pipeline.config import OutputConfig
-from jobber_pipeline.load import get_writer
-from jobber_pipeline.logger import create_logger
+from j_pipeline.config import OutputConfig
+from j_pipeline.load import get_writer
+from j_pipeline.logger import create_logger
 
 config = OutputConfig(
     base_output_dir="output",
@@ -440,7 +440,7 @@ writer.write_table(sales_df, "sales_table")
 
 ```bash
 export PYTHONPATH=src
-python -m jobber_pipeline.main --config config/pipeline_config.yml
+python -m j_pipeline.main --config config/pipeline_config.yml
 ```
 
 ### 7.2 Data Files Not Found
@@ -451,7 +451,7 @@ python -m jobber_pipeline.main --config config/pipeline_config.yml
 2. Tries project-root-relative paths
 3. Recursively searches project for filename
 
-Place data files in `src/jobber_pipeline/data/` or `data/` at project root.
+Place data files in `src/j_pipeline/data/` or `data/` at project root.
 
 ### 7.3 Backend Not Available
 
@@ -498,13 +498,13 @@ The repository includes `.github/workflows/ci.yml` which:
 
 ```bash
 # Run linting
-flake8 src/jobber_pipeline --max-complexity=10
+flake8 src/j_pipeline --max-complexity=10
 
 # Run tests with coverage
-pytest tests/ --cov=src/jobber_pipeline --cov-report=term
+pytest tests/ --cov=src/j_pipeline --cov-report=term
 
 # Run end-to-end pipeline
-PYTHONPATH=src python -m jobber_pipeline.main --config config/pipeline_config.yml
+PYTHONPATH=src python -m j_pipeline.main --config config/pipeline_config.yml
 ```
 
 ## 9. Data Governance
@@ -532,7 +532,7 @@ Use the `query_warehouse.py` utility to inspect generated tables:
 
 ```bash
 export PYTHONPATH=src
-python src/jobber_pipeline/query_warehouse.py
+python src/j_pipeline/query_warehouse.py
 ```
 
 This displays:

@@ -1,0 +1,8 @@
+pandas>=2.0.0
+pyyaml
+python-dateutil
+pyiceberg[sql-sqlite]
+adbc-driver-sqlite
+deltalake>=0.13.0
+pyarrow>=12.0.0
+pytest
